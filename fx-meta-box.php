@@ -14,7 +14,9 @@
  * @author David Chandra Purnama <david@genbumedia.com>
  * @copyright Copyright (c) 2016, Genbu Media
 **/
-namespace fx_wpshop\fx_meta_box;
+
+/* Change the namespace if including in plugin. */
+namespace fx_meta_box;
 if ( ! defined( 'WPINC' ) ) { die; }
 
 
@@ -137,12 +139,12 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\scripts', 1 );
 function scripts( $hook_suffix ){
 
 	/* Use this as dependency in your scripts */
-	wp_register_style( 'fx-meta-box', URI. 'assets/style.css', array(), VERSION );
-	wp_register_script( 'fx-meta-box', URI. 'assets/script.js', array( 'jquery' ), VERSION, true );
+	wp_register_style( 'fx-meta-box', URI . 'assets/style.css', array(), VERSION );
+	wp_register_script( 'fx-meta-box', URI . 'assets/script.js', array( 'jquery' ), VERSION, true );
 
 	/* This will auto-load when the fields is used. */
-	wp_register_script( 'fx-meta-box_radio-tabs', URI. 'assets/radio-tabs.js', array( 'jquery', 'fx-meta-box' ), VERSION, true );
-	wp_register_script( 'fx-meta-box_upload-url', URI. 'assets/upload-url.js', array( 'jquery', 'fx-meta-box' ), VERSION, true );
+	wp_register_script( 'fx-meta-box_radio-tabs', URI . 'assets/radio-tabs.js', array( 'jquery', 'fx-meta-box' ), VERSION, true );
+	wp_register_script( 'fx-meta-box_upload-url', URI . 'assets/upload-url.js', array( 'jquery', 'fx-meta-box' ), VERSION, true );
 
 }
 

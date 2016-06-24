@@ -1,5 +1,5 @@
 <?php
-namespace fx_wpshop\fx_meta_box;
+namespace fx_meta_box;
 if ( ! defined( 'WPINC' ) ) { die; }
 
 /**
