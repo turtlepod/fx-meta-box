@@ -1,0 +1,229 @@
+/**
+ * f(x) MBTabs Style
+ * Based on ButterBean UI by Justin Tadlock
+ * @link https://github.com/justintadlock/butterbean
+**/
+
+/* Wrapper
+------------------------------------------ */
+.fx-mbtabs-ui .inside{
+	margin:  0 !important;
+	padding: 0;
+}
+.fx-mbtabs{
+	overflow: hidden;
+	background: #fff;
+	background: linear-gradient( 90deg, #fafafa 0%, #fafafa 180px, #fff 180px, #fff 100% );
+}
+	@media only screen and ( max-width: 782px ), ( max-width: 980px ) and ( min-width: 851px ) {
+		.fx-mbtabs{
+			background: linear-gradient( 90deg, #fafafa 0%, #fafafa 48px, #fff 48px, #fff 100% );
+		}
+	}
+
+
+/* Nav
+------------------------------------------ */
+.fx-mbtabs-nav{
+	position: relative;
+	float: left;
+	list-style: none;
+	width: 180px;/*20%;*/
+	line-height: 1em;
+	margin: 0 0 -1px 0;
+	padding: 0;
+	background-color: #fafafa;
+	border-right: 1px solid #eee;
+	box-sizing: border-box;
+}
+.fx-mbtabs-nav li{
+	display: block;
+	position: relative;
+	margin: 0;
+	padding: 0;
+	line-height: 20px;
+}
+.fx-mbtabs-nav li a{
+	display: block;
+	margin: 0;
+	padding: 10px;
+	line-height: 20px !important;
+	text-decoration: none;
+	border-bottom: 1px solid #eee;
+	box-shadow: none;
+}
+.fx-mbtabs-nav .dashicons{
+	line-height:  20px;
+	margin-right: 3px;
+}
+.fx-mbtabs-nav li.selected a{
+	position: relative;
+	font-weight: normal;
+	color: #555;
+	background-color: #e0e0e0;
+}
+	@media only screen and ( max-width: 782px ), ( max-width: 980px ) and ( min-width: 851px ) {
+		.fx-mbtabs-nav{
+			width: 48px;
+		}
+		.fx-mbtabs-nav .dashicons{
+			width: 24px;
+			height: 24px;
+			font-size: 24px;
+			line-height: 24px;
+		}
+		.fx-mbtabs-nav .dashicons:before{
+			width: 24px;
+			height: 24px;
+		}
+		.fx-mbtabs-nav .label{
+			overflow: hidden;
+			position: absolute;
+			top: -1000em;
+			left: -1000em;
+			width: 1px;
+			height: 1px;
+		}
+	}
+
+
+/* Content
+------------------------------------------ */
+.fx-mbtabs-content{
+	float: left;
+	width: calc( 100% - 180px );
+	margin-left: -1px;
+	border-left: 1px solid #eee;
+}
+	@media only screen and ( max-width: 782px ), ( max-width: 980px ) and ( min-width: 851px ) {
+		.fx-mbtabs-content{
+			width: calc( 100% - 48px );
+		}
+	}
+
+
+/* Side Meta Box
+------------------------------------------ */
+#side-sortables .fx-mbtabs{
+	background: linear-gradient( 90deg, #fafafa 0%, #fafafa 48px, #fff 48px, #fff 100% );
+}
+	@media only screen and ( min-width: 850px ) {
+		#side-sortables .fx-mbtabs{
+			background: #fff;
+		}
+		#side-sortables .fx-mbtabs-content{
+			width: 100%;
+		}
+		#side-sortables .fx-mbtabs-nav{
+			display: table;
+			width:   100%;
+		}
+		#side-sortables .fx-mbtabs-nav li{
+			display: table-cell;
+			text-align: center;
+			border-right: 1px solid #eee;
+		}
+		#side-sortables .fx-mbtabs-nav li:last-of-type{
+			border-right: none;
+		}
+		#side-sortables .fx-mbtabs-nav li a{
+			padding: 10px 0;
+		}
+		#side-sortables .fx-mbtabs-nav .dashicons{
+			width: 24px;
+			height: 24px;
+			font-size: 24px;
+			line-height: 24px;
+		}
+		#side-sortables .fx-mbtabs-nav .dashicons:before{
+			width: 24px;
+			height: 24px;
+		}
+		#side-sortables .fx-mbtabs-nav .label{
+			overflow: hidden;
+			position: absolute;
+			top: -1000em;
+			left: -1000em;
+			width: 1px;
+			height: 1px;
+		}
+	}
+
+
+/* Section
+------------------------------------------ */
+.fx-mbtabs-section{
+	padding: 0 12px;
+	box-sizing: border-box;
+}
+
+
+/* Fields
+------------------------------------------ */
+.fx-mb-field{
+	padding-bottom: 10px;
+	border-bottom: 1px solid #eee;
+}
+.fx-mb-label{
+	font-size: 16px;
+	font-weight: bold;
+}
+.fx-mb-description{
+	color: #666;
+	line-height: 1.5;
+	font-size: 13px;
+	font-style: italic;
+	margin: 1em 0;
+}
+/* Utility */
+.fx-mb-p{
+	font-size: 13px;
+	line-height: 1.5;
+	margin: 1em 0;
+}
+.fx-mb-inline{
+	display: inline !important;
+}
+
+
+/* Upload URL
+------------------------------------------ */
+.fx-mb-field-upload-url input[type="url"]{
+	margin-bottom: 1em;
+	display: block;
+}
+
+/* Select Fields
+------------------------------------------ */
+
+
+/* Textarea Fields
+------------------------------------------ */
+
+
+/* URL Fields
+------------------------------------------ */
+
+
+/* Radio Tabs
+------------------------------------------ */
+.fx-mb-field-radio-tabs .wp-tab-panel{
+	margin-top: 4px;
+	max-height: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
