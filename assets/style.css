@@ -177,7 +177,9 @@
 		width: calc( 100% - 220px );
 		max-width: 100%;
 	}
-.fx-mb-label,
+.fx-mb-label p{
+	margin-bottom: 0;
+}
 .fx-mb-label label,
 .fx-mb-label span{
 	font-size: 16px;
