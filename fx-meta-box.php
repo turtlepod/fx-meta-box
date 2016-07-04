@@ -20,6 +20,7 @@ fx_Meta_Box::get_instance();
 
 /**
  * Meta Box Library
+ * Important: Change this class name with unique prefix if used as library.
  * @since 1.0.0
  */
 final class fx_Meta_Box{
@@ -135,8 +136,12 @@ final class fx_Meta_Box{
 			'placeholder'  => '',
 			'input_class'  => 'large-text',
 			'input_type'   => 'text',
+			'max'          => false,
+			'min'          => false,
 		);
 		$args = wp_parse_args( $args, $args_default );
+		$max = false !== $args['max'] ? ' max="' . $args['max'] . '"' : '';
+		$min = false !== $args['min'] ? ' min="' . $args['min'] . '"' : '';
 		?>
 			<div id="<?php echo sanitize_html_class( $args['field_id'] );?>" class="fx-mb-field fx-mb-field-input">
 
@@ -152,7 +157,7 @@ final class fx_Meta_Box{
 
 				<div class="fx-mb-content">
 					<p>
-						<input autocomplete="off" id="<?php echo sanitize_html_class( $args['input_id'] );?>" placeholder="<?php echo esc_attr( $args['placeholder'] );?>" type="<?php echo esc_attr( $args['input_type'] ); ?>" class="<?php echo esc_attr( $args['input_class'] ); ?>" name="<?php echo esc_attr( $args['name'] );?>" value="<?php echo $args['value']; ?>">
+						<input autocomplete="off" id="<?php echo sanitize_html_class( $args['input_id'] );?>" placeholder="<?php echo esc_attr( $args['placeholder'] );?>" type="<?php echo esc_attr( $args['input_type'] ); ?>" class="<?php echo esc_attr( $args['input_class'] ); ?>" name="<?php echo esc_attr( $args['name'] );?>" value="<?php echo $args['value']; ?>"<?php echo $max . $min; ?>>
 					</p>
 
 					<?php if( $args['description'] ){ ?>
@@ -464,6 +469,70 @@ final class fx_Meta_Box{
 	}
 
 
+	/**
+	 * WP Edior Field
+	 * @since 1.0.0
+	 */
+	public static function wp_editor_field( $args ){
+		$args_default = array(
+			'field_id'     => "fx-mb-field_{$args['name']}",
+			'input_id'     => "fx-mb-input_{$args['name']}",
+			'label'        => '',
+			'name'         => '',
+			'description'  => '',
+			'value'        => '',
+			'placeholder'  => '',
+			'settings'     => array(),
+		);
+		$args = wp_parse_args( $args, $args_default );
+
+		/* Editor ID (remove hypens) */
+		$args['input_id'] = sanitize_title( $args['input_id'] );
+		$args['input_id'] = str_replace( '-', '_', $args['input_id'] );
+
+		/* Default for editor settings */
+		if( !isset( $args['settings']['textarea_name'] ) ){
+			$args['settings']['textarea_name'] = $args['name'];
+		}
+		if( !isset( $args['settings']['editor_height'] ) ){
+			$args['settings']['editor_height'] = 200;
+		}
+		?>
+			<div id="<?php echo sanitize_html_class( $args['field_id'] );?>" class="fx-mb-field fx-mb-field-wp-editor">
+
+				<div class="fx-mb-label">
+					<?php if( $args['label'] ){ ?>
+					<p>
+						<span>
+							<?php echo $args['label']; ?>
+						</span>
+					</p>
+					<?php } // label ?>
+				</div><!-- .fx-mb-label -->
+
+				<div class="fx-mb-content">
+					<div class="fx-mb-p">
+						<?php
+						wp_editor(
+							$content = $args['value'],
+							$editor_id = $args['input_id'],
+							$settings = $args['settings']
+						);
+						?>
+					</div>
+
+					<?php if( $args['description'] ){ ?>
+					<p class="fx-mb-description">
+						<?php echo $args['description'];?>
+					</p>
+					<?php } // description ?>
+				</div><!-- .fx-mb-content -->
+
+			</div><!-- .fx-mb-field -->
+		<?php
+	}
+
+
 	/* Other Utility
 	------------------------------------------ */
 
@@ -486,18 +555,18 @@ final class fx_Meta_Box{
 		/* Get meta box nonce ID */
 		$nonce_id = self::nonce_id( $meta_box_id );
 
-		/* Check if it's valid */
+		/* Check if it's valid nonce */
 		if ( ! isset( $request[$nonce_id] ) || ! wp_verify_nonce( $request[$nonce_id], $nonce_value ) ){
-			return $post_id;
+			return false;
 		}
 		/* No Auto Save */
 		if( defined('DOING_AUTOSAVE' ) && DOING_AUTOSAVE ){
-			return $post_id;
+			return false;
 		}
 		/* Check user caps */
 		$post_type = get_post_type_object( $post->post_type );
 		if ( !current_user_can( $post_type->cap->edit_post, $post_id ) ){
-			return $post_id;
+			return false;
 		}
 
 		/* Return true after pass all check. */
@@ -526,19 +595,6 @@ final class fx_Meta_Box{
 		elseif ( empty( $new_data ) && $old_data ){
 			delete_post_meta( $post_id, $key );
 		}
-	}
-
-
-	/* Sanitize Functions
-	------------------------------------------ */
-
-	/**
-	 * Sanitize Version
-	 */
-	public static function sanitize_version( $input ){
-		$output = sanitize_text_field( $input );
-		$output = str_replace( ' ', '', $output );
-		return trim( esc_attr( $output ) );
 	}
 
 	/* Use singleton pattern

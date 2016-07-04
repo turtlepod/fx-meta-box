@@ -162,8 +162,21 @@
 ------------------------------------------ */
 .fx-mb-field{
 	padding-bottom: 10px;
-	border-bottom: 1px solid #eee;
 }
+	.fx-mb-field:after{
+		content:".";display:block;height:0;clear:both;visibility:hidden;
+	}
+.fx-mb-label{
+	float: left;
+	width: 220px;
+	min-height: 10px;
+	padding: 0 0 0 0;
+}
+	.fx-mb-content{
+		float: left;
+		width: calc( 100% - 220px );
+		max-width: 100%;
+	}
 .fx-mb-label,
 .fx-mb-label label,
 .fx-mb-label span{
@@ -212,20 +225,45 @@
 .fx-mb-field-radio-tabs .wp-tab-panel{
 	margin-top: 4px;
 	max-height: none;
+	overflow: inherit;
 }
 
+/* Media Queries
+------------------------------------------ */
+/* 1 column */
+@media only screen and ( max-width: 1100px ) {
+	.wp-admin:not(.folded) .fx-mb-label{
+		width: 100%;
+		min-height: 0;
+	}
+	.wp-admin:not(.folded) .fx-mb-label p{
+		margin: 0;
+	}
+	.wp-admin:not(.folded) .fx-mb-content{
+		width: 100%;
+	}
+}
+@media only screen and ( max-width: 980px ) {
+	.wp-admin .fx-mb-label{
+		width: 100%;
+		min-height: 0;
+	}
+	.wp-admin .fx-mb-label p{
+		margin: 0;
+	}
+	.wp-admin .fx-mb-content{
+		width: 100%;
+	}
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+/* On Tabs or Side
+------------------------------------------ */
+.fx-mbtabs-content .fx-mb-label,
+#side-sortables .fx-mb-label{
+	width: 100%;
+	min-height: 0;
+}
+.fx-mbtabs-content .fx-mb-content,
+#side-sortables .fx-mb-content{
+	width: 100%;
+}
