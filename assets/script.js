@@ -1,7 +1,7 @@
 ;( function( $ ){
 
 	/**
-	 * f(x) MBTabs Script
+	 * f(x) Meta Box Tabs UI Script
 	 **/
 
 	/* Add CSS for styling */
