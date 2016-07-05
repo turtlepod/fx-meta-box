@@ -20,6 +20,9 @@
 			background: linear-gradient( 90deg, #fafafa 0%, #fafafa 48px, #fff 48px, #fff 100% );
 		}
 	}
+.fx-mb-hideme{
+	display: none !important;
+}
 
 
 /* Nav

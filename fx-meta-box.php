@@ -31,7 +31,7 @@ final class fx_Meta_Box{
 
 	/* Construct
 	------------------------------------------ */
-	public function __construct(){
+	function __construct(){
 
 		/* Vars */
 		self::$version = '1.0.0';
@@ -70,7 +70,7 @@ final class fx_Meta_Box{
 	 * Create Tabbed UI in Meta Box
 	 * @since 1.0.0
 	 */
-	public static function tabs_ui( $tabs, $meta_box_id = '' ){
+	public static function tabs_ui( $tabs, $meta_box_id = '', $post_id = false ){
 		if( $meta_box_id ){
 			$tabs = apply_filters( sanitize_title( 'fx_meta_box_tabs-' . $meta_box_id ), $tabs );
 		}
@@ -80,13 +80,16 @@ final class fx_Meta_Box{
 
 			<ul class="fx-mbtabs-nav">
 				<?php
+				$first_tab = '';
 				$i = 0;
 				foreach( $tabs as $nav ){
-					$i++; $class = ( 1 === $i ) ? 'selected' : '';
+					$i++;
+					if( 1 === $i ){ $first_tab = $nav['id']; }
+					$class = ( 1 === $i ) ? 'fx-mbtabs-tab selected' : 'fx-mbtabs-tab';
 					$id = "fx-mbtab_{$nav['id']}";
 					?>
 					<li class="<?php echo esc_attr( $class ); ?>">
-						<a href="#<?php echo esc_attr( $id ); ?>">
+						<a data-value="<?php echo esc_attr( $nav['id'] ); ?>" href="#<?php echo esc_attr( $id ); ?>">
 							<i class="dashicons <?php echo esc_attr( $nav['icon'] ); ?>"></i>
 							<span class="label"><?php echo esc_attr( $nav['label'] ); ?></span>
 						</a>
@@ -94,6 +97,18 @@ final class fx_Meta_Box{
 					<?php
 				}
 				?>
+				<?php
+				/* Hidden Input to save active tabs. */
+				$name = '';
+				$value = $first_tab;
+				if( false !== $post_id && $meta_box_id ){
+					$name = sanitize_title( $meta_box_id . '_active_tab' );
+					$value = get_post_meta( $post_id, $name, true );
+					$value = $value ? $value : $first_tab;
+				} ?>
+				<li class="fx-mb-hideme" style="display:none;">
+					<input data-id="fx_mbtabs_active_tab" type="hidden" autocomplete="off" value="<?php echo $value;?>" name="<?php echo $name; ?>">
+				</li>
 			</ul><!-- .fx-mbtabs-nav -->
 
 			<div class="fx-mbtabs-content">
@@ -127,44 +142,43 @@ final class fx_Meta_Box{
 	 */
 	public static function input_field( $args ){
 		$args_default = array(
-			'field_id'     => "fx-mb-field_{$args['name']}",
-			'input_id'     => "fx-mb-input_{$args['name']}",
 			'label'        => '',
-			'name'         => '',
 			'description'  => '',
-			'value'        => '',
-			'placeholder'  => '',
-			'input_class'  => 'large-text',
-			'input_type'   => 'text',
-			'max'          => false,
-			'min'          => false,
+			'field_attr'   => array(),
+			'input_attr'   => array( 'name' => '' ),
 		);
 		$args = wp_parse_args( $args, $args_default );
-		$max = false !== $args['max'] ? ' max="' . $args['max'] . '"' : '';
-		$min = false !== $args['min'] ? ' min="' . $args['min'] . '"' : '';
-		?>
-			<div id="<?php echo sanitize_html_class( $args['field_id'] );?>" class="fx-mb-field fx-mb-field-input">
 
-				<div class="fx-mb-label">
-					<?php if( $args['label'] ){ ?>
-						<p>
-							<label for="<?php echo sanitize_html_class( $args['input_id'] );?>">
-								<?php echo $args['label']; ?>
-							</label>
-						</p>
-					<?php } // label ?>
-				</div><!-- .fx-mb-label -->
+		/* Extract var */
+		extract( $args );
+
+		/* Field Attr */
+		$field_attr_default = array(
+			'id'           => $input_attr['name'] ? "fx-mb-field_{$input_attr['name']}" : '',
+			'class'        => '',
+		);
+		$field_attr = wp_parse_args( $field_attr, $field_attr_default );
+		$field_attr['class'] = trim( $field_attr['class'] . " fx-mb-field fx-mb-field-input" );
+
+		/* Input Attr */
+		$input_attr_default = array(
+			'id'           => $input_attr['name'] ? "fx-mb-input_{$input_attr['name']}" : '',
+			'class'        => 'large-text',
+			'name'         => '',
+			'value'        => '',
+			'type'         => 'text',
+			'autocomplete' => 'off',
+		);
+		$input_attr = wp_parse_args( $input_attr, $input_attr_default );
+		?>
+			<div <?php echo self::attr( $field_attr ); ?>>
+				<?php self::label( $label, $input_attr['id'] ); ?>
 
 				<div class="fx-mb-content">
 					<p>
-						<input autocomplete="off" id="<?php echo sanitize_html_class( $args['input_id'] );?>" placeholder="<?php echo esc_attr( $args['placeholder'] );?>" type="<?php echo esc_attr( $args['input_type'] ); ?>" class="<?php echo esc_attr( $args['input_class'] ); ?>" name="<?php echo esc_attr( $args['name'] );?>" value="<?php echo $args['value']; ?>"<?php echo $max . $min; ?>>
+						<input <?php self::attr( $input_attr ); ?>>
 					</p>
-
-					<?php if( $args['description'] ){ ?>
-					<p class="fx-mb-description">
-						<?php echo $args['description'];?>
-					</p>
-					<?php } // description ?>
+					<?php self::description( $description ); ?>
 				</div><!-- .fx-mb-content -->
 
 			</div><!-- .fx-mb-field -->
@@ -440,7 +454,9 @@ final class fx_Meta_Box{
 							<?php
 						}
 						?>
-						<input type="hidden" name="<?php echo esc_attr( $args['name'] );?>" value="<?php echo esc_attr( $value ); ?>" autocomplete="off">
+						<li class="fx-mb-hideme" style="display:none;">
+							<input type="hidden" name="<?php echo esc_attr( $args['name'] );?>" value="<?php echo esc_attr( $value ); ?>" autocomplete="off">
+						</li>
 					</ul><!-- .wp-tab-bar -->
 
 					<?php
@@ -533,7 +549,61 @@ final class fx_Meta_Box{
 	}
 
 
-	/* Other Utility
+	/* Field Utility Functions
+	------------------------------------------ */
+
+	/**
+	 * Render Label
+	 * @since 1.0.0
+	 */
+	public static function label( $label, $input_id ){
+		?>
+		<div class="fx-mb-label">
+			<?php if( $label ){ ?>
+				<p>
+					<?php if( $input_id ){ ?>
+						<label for="<?php echo sanitize_html_class( $input_id );?>">
+							<?php echo $label; ?>
+						</label>
+					<?php } else { ?>
+						<span>
+							<?php echo $label; ?>
+						</span>
+					<?php } ?>
+				</p>
+			<?php } // label ?>
+		</div><!-- .fx-mb-label -->
+		<?php
+	}
+
+	/**
+	 * Render Description
+	 * @since 1.0.0
+	 */
+	public static function description( $description ){
+	if( $description ){ ?>
+		<p class="fx-mb-description">
+			<?php echo $description;?>
+		</p>
+	<?php }
+	}
+
+	/**
+	 * Build Attr
+	 * Create element attr from array.
+	 * @since 1.0.0
+	 */
+	public static function attr( $attr ){
+		if( !is_array( $attr ) || empty( $attr ) ) return false;
+		$out = '';
+		foreach ( $attr as $name => $value ){
+			$out .= false !== $value ? sprintf( ' %s="%s"', esc_html( $name ), esc_attr( $value ) ) : esc_html( " {$name}" );
+		}
+		echo $out;
+	}
+
+
+	/* Save Post Utility
 	------------------------------------------ */
 
 	/**
@@ -596,6 +666,7 @@ final class fx_Meta_Box{
 			delete_post_meta( $post_id, $key );
 		}
 	}
+
 
 	/* Use singleton pattern
 	------------------------------------------ */

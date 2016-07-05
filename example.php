@@ -61,11 +61,13 @@ function meta_box_with_tabs( $post, $box ){
 				$args = array(
 					'label'         => __( 'Text', 'domain' ),
 					'description'   => __( 'Text input description...', 'domain' ),
-					'name'          => 'test_text1',
-					'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text1', true ) ),
-					'placeholder'   => sanitize_text_field( 'Add text here...' ),
-					'input_type'    => 'text',
-					'input_class'   => 'medium-text',
+					'input_attr'    => array(
+						'name'          => 'test_text1',
+						'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text1', true ) ),
+						'placeholder'   => sanitize_text_field( 'Add text here...' ),
+						'type'          => 'text',
+						'class'         => 'medium-text',
+					),
 				);
 				fx_Meta_Box::input_field( $args );
 
@@ -138,11 +140,13 @@ function meta_box_with_tabs( $post, $box ){
 								$args = array(
 									'label'         => __( 'Text 2', 'domain' ),
 									'description'   => __( 'Text input description...', 'domain' ),
-									'name'          => 'test_text2',
-									'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text2', true ) ),
-									'placeholder'   => sanitize_text_field( 'Add text here...' ),
-									'input_type'    => 'text',
-									'input_class'   => 'medium-text',
+									'input_attr'    => array(
+										'name'          => 'test_text2',
+										'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text2', true ) ),
+										'placeholder'   => sanitize_text_field( 'Add text here...' ),
+										'type'          => 'text',
+										'class'         => 'medium-text',
+									),
 								);
 								fx_Meta_Box::input_field( $args );
 
@@ -172,7 +176,7 @@ function meta_box_with_tabs( $post, $box ){
 	);
 
 	/* Create tabs */
-	fx_Meta_Box::tabs_ui( $tabs, $box['id'] );
+	fx_Meta_Box::tabs_ui( $tabs, $box['id'], $post_id );
 
 	/* Add nonce */
 	wp_nonce_field( __FILE__ , fx_Meta_Box::nonce_id( $box['id'] ) );
@@ -189,11 +193,13 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 3', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'name'          => 'test_text3',
-		'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text3', true ) ),
-		'placeholder'   => sanitize_text_field( 'Add text here...' ),
-		'input_type'    => 'text',
-		'input_class'   => 'medium-text',
+		'input_attr'    => array(
+			'name'          => 'test_text3',
+			'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text3', true ) ),
+			'placeholder'   => sanitize_text_field( 'Add text here...' ),
+			'type'          => 'text',
+			'class'         => 'medium-text',
+		),
 	);
 	fx_Meta_Box::input_field( $args );
 
@@ -201,11 +207,13 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 4 (URL)', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'name'          => 'test_text4',
-		'value'         => esc_url_raw( get_post_meta( $post_id, 'test_text4', true ) ),
-		'placeholder'   => sanitize_text_field( 'http://' ),
-		'input_type'    => 'url',
-		'input_class'   => 'large-text',
+		'input_attr'    => array(
+			'name'          => 'test_text4',
+			'value'         => esc_url_raw( get_post_meta( $post_id, 'test_text4', true ) ),
+			'placeholder'   => esc_html( 'http://' ),
+			'type'          => 'url',
+			'class'         => 'large-text',
+		),
 	);
 	fx_Meta_Box::input_field( $args );
 
@@ -213,11 +221,15 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 5 (URL)', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'name'          => 'test_text5',
-		'value'         => intval( get_post_meta( $post_id, 'test_text5', true ) ),
-		'placeholder'   => '',
-		'input_type'    => 'number',
-		'input_class'   => 'small-text',
+		'input_attr'    => array(
+			'name'          => 'test_text5',
+			'value'         => intval( get_post_meta( $post_id, 'test_text5', true ) ),
+			'placeholder'   => 0,
+			'type'          => 'number',
+			'class'         => 'small-text',
+			'min'           => "0",
+			'max'           => "3",
+		),
 	);
 	fx_Meta_Box::input_field( $args );
 
@@ -248,6 +260,14 @@ function save_meta_box_with_tabs( $post_id, $post ){
 
 	/* FIELDS */
 	$fields = array(
+
+		/* Save Active Tab */
+		array(
+			'key'  => 'fx_meta_box_tabs_ui_active_tab',
+			'data' => isset( $request['fx_meta_box_tabs_ui_active_tab'] ) ? esc_attr( $request['fx_meta_box_tabs_ui_active_tab'] ) : '',
+		),
+
+		/* Save General Section */
 		array(
 			'key'  => 'test_text1',
 			'data' => isset( $request['test_text1'] ) ? esc_attr( $request['test_text1'] ) : '',
@@ -256,6 +276,8 @@ function save_meta_box_with_tabs( $post_id, $post ){
 			'key'  => 'test_textarea1',
 			'data' => isset( $request['test_textarea1'] ) ? wp_kses_post( $request['test_textarea1'] ) : '',
 		),
+
+		/* Save Uploads Section */
 		array(
 			'key'  => 'test_upload1',
 			'data' => isset( $request['test_upload1'] ) ? esc_url_raw( $request['test_upload1'] ) : '',
@@ -264,6 +286,8 @@ function save_meta_box_with_tabs( $post_id, $post ){
 			'key'  => 'test_upload2',
 			'data' => isset( $request['test_upload2'] ) ? esc_url_raw( $request['test_upload2'] ) : '',
 		),
+
+		/* Save Radio/Tab Section */
 		array(
 			'key'  => 'test_radio1',
 			'data' => isset( $request['test_radio1'] ) ? esc_attr( $request['test_radio1'] ) : '',
@@ -284,6 +308,7 @@ function save_meta_box_with_tabs( $post_id, $post ){
 
 /* Save post meta on the 'save_post' hook. */
 add_action( 'save_post', __NAMESPACE__ . '\save_meta_box_simple', 10, 2 );
+
 
 /**
  * Save Post Data
