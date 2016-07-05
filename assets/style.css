@@ -20,6 +20,9 @@
 			background: linear-gradient( 90deg, #fafafa 0%, #fafafa 48px, #fff 48px, #fff 100% );
 		}
 	}
+.fx-mb-hideme{
+	display: none !important;
+}
 
 
 /* Nav
@@ -168,16 +171,18 @@
 	}
 .fx-mb-label{
 	float: left;
-	width: 220px;
+	width: 180px;
 	min-height: 10px;
 	padding: 0 0 0 0;
 }
 	.fx-mb-content{
 		float: left;
-		width: calc( 100% - 220px );
+		width: calc( 100% - 180px );
 		max-width: 100%;
 	}
-.fx-mb-label,
+.fx-mb-label p{
+	margin-bottom: 0;
+}
 .fx-mb-label label,
 .fx-mb-label span{
 	font-size: 16px;

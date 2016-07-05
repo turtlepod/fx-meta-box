@@ -1,0 +1,15 @@
+f(x) Meta Box Changelog
+=======================
+
+#### 1.0.0 - 4 July 2016
+
+* Initial release.
+* Available UI:
+* Tabs UI (based on Butterbean) 
+* Available fields:
+* Input (Text, URL, Email, Number, etc)
+* Textarea
+* Select
+* Checkbox (Single, Multiple)
+* Radio Tab
+* WP Editor
