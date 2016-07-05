@@ -330,9 +330,12 @@ add_action( 'admin_enqueue_scripts', __NAMESPACE__ . '\admin_scripts' );
  * Enqueue Needed Scripts
  * @since 1.0.0
  */
-function admin_scripts(){
-	wp_enqueue_style( 'fx-meta-box' );
-	wp_enqueue_script( 'fx-meta-box' );
+function admin_scripts( $hook_suffix ){
+	global $post_type;
+	if( in_array( $hook_suffix, array( 'post-new.php', 'post.php' ) ) && 'page' == $post_type ){
+		wp_enqueue_style( 'fx-meta-box' );
+		wp_enqueue_script( 'fx-meta-box' );
+	}
 }
 
 
