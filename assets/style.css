@@ -171,13 +171,13 @@
 	}
 .fx-mb-label{
 	float: left;
-	width: 220px;
+	width: 180px;
 	min-height: 10px;
 	padding: 0 0 0 0;
 }
 	.fx-mb-content{
 		float: left;
-		width: calc( 100% - 220px );
+		width: calc( 100% - 180px );
 		max-width: 100%;
 	}
 .fx-mb-label p{

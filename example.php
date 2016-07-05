@@ -61,7 +61,7 @@ function meta_box_with_tabs( $post, $box ){
 				$args = array(
 					'label'         => __( 'Text', 'domain' ),
 					'description'   => __( 'Text input description...', 'domain' ),
-					'input_attr'    => array(
+					'control_attr'  => array(
 						'name'          => 'test_text1',
 						'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text1', true ) ),
 						'placeholder'   => sanitize_text_field( 'Add text here...' ),
@@ -75,12 +75,82 @@ function meta_box_with_tabs( $post, $box ){
 				$args = array(
 					'label'         => __( 'Text Area', 'domain' ),
 					'description'   => __( 'Textarea description...', 'domain' ),
-					'name'          => 'test_textarea1',
-					'value'         => esc_textarea( get_post_meta( $post_id, 'test_textarea1', true ) ),
-					'placeholder'   => esc_textarea( 'Lorem ipsum...' ),
+					'control_attr'  => array(
+						'name'          => 'test_textarea1',
+						'value'         => esc_textarea( get_post_meta( $post_id, 'test_textarea1', true ) ),
+						'placeholder'   => sanitize_text_field( 'Lorem ipsum...' ),
+					),
 				);
 				fx_Meta_Box::textarea_field( $args );
 
+				/* Select */
+				$args = array(
+					'label'         => __( 'Select', 'domain' ),
+					'description'   => __( 'Select description...', 'domain' ),
+					'control_attr'  => array(
+						'name'          => 'test_select1',
+						'value'         => fx_Meta_Box::sanitize_choices( get_post_meta( $post_id, 'test_select1', true ), array( 'siji', 'loro', 'telu' ), '' ),
+					),
+					'choices'       => array(
+						'siji'          => __( 'One', 'domain' ),
+						'loro'          => __( 'Two', 'domain' ),
+						'telu'          => __( 'Three', 'domain' ),
+					),
+				);
+				fx_Meta_Box::select_field( $args );
+
+			},
+		),
+		'checkboxes' => array(
+			'id'          => 'checkboxes',
+			'icon'        => 'dashicons-yes',
+			'label'       => __( 'Checkboxes', 'domain' ),
+			'callback'    => function() use( $post_id ){
+
+				/* Single Checkbox (no label, no desc) */
+				$args = array(
+					'multiple'      => false,
+					'control_attr'  => array(
+						'name'          => 'test_check1',
+						'value'         => get_post_meta( $post_id, 'test_check1', true ) ? "1" : "",
+					),
+					'choices'       => array(
+						'1'             => __( 'Single Checkbox', 'domain' ),
+					),
+				);
+				fx_Meta_Box::checkbox_field( $args );
+
+				/* Single Checkbox (with label and desc) */
+				$args = array(
+					'label'         => __( 'Check this', 'domain' ),
+					'description'   => __( 'checkbox description...', 'domain' ),
+					'multiple'      => false,
+					'control_attr'  => array(
+						'name'          => 'test_check2',
+						'value'         => get_post_meta( $post_id, 'test_check2', true ) ? "1" : "",
+					),
+					'choices'       => array(
+						'1'             => __( 'Single Checkbox with label and description', 'domain' ),
+					),
+				);
+				fx_Meta_Box::checkbox_field( $args );
+
+				/* Multiple Checkbox */
+				$args = array(
+					'label'         => __( 'Multi Checkboxes', 'domain' ),
+					'description'   => __( 'Select your fav fruit.', 'domain' ),
+					'multiple'      => true,
+					'control_attr'  => array(
+						'name'          => 'test_check3[]',
+						'value'         => fx_Meta_Box::sanitize_multiple( get_post_meta( $post_id, 'test_check3', true ), array( 'apple', 'mango', 'banana' ) ),
+					),
+					'choices'       => array(
+						'apple'           => __( 'Apple', 'domain' ),
+						'mango'           => __( 'Mango', 'domain' ),
+						'banana'          => __( 'Banana', 'domain' ),
+					),
+				);
+				fx_Meta_Box::checkbox_field( $args );
 			},
 		),
 		'uploads' => array(
@@ -89,30 +159,46 @@ function meta_box_with_tabs( $post, $box ){
 			'label'       => __( 'Uploads', 'domain' ),
 			'callback'    => function() use( $post_id ){
 
-				/* ZIP Upload */
+				/* Simple File Upload */
 				$args = array(
-					'label'       => __( 'ZIP Upload', 'domain' ),
-					'description' => __( 'URL to ZIP file.', 'domain' ),
-					'name'        => 'test_upload1',
-					'value'       => esc_url_raw( get_post_meta( $post_id, 'test_upload1', true ) ),
-					'media'        => array(
-						'title'          => __( 'Upload ZIP', 'domain' ),
-						'button'         => __( 'Insert ZIP URL', 'domain' ),
-						'library_type'   => 'application/zip',
+					'label'         => __( 'Upload File', 'domain' ),
+					'description'   => __( 'URL to file.', 'domain' ),
+					'control_attr'  => array(
+						'name'           => 'test_upload1',
+						'value'          => esc_url_raw( get_post_meta( $post_id, 'test_upload1', true ) ),
 					),
 				);
 				fx_Meta_Box::upload_url_field( $args );
 
 				/* Image Upload */
 				$args = array(
-					'label'       => __( 'Image Upload', 'domain' ),
-					'description' => __( 'URL to Image file.', 'domain' ),
-					'name'        => 'test_upload2',
-					'value'       => esc_url_raw( get_post_meta( $post_id, 'test_upload2', true ) ),
-					'media'        => array(
-						'title'          => __( 'Upload Image', 'domain' ),
-						'button'         => __( 'Insert Image URL', 'domain' ),
+					'label'         => __( 'Upload Image', 'domain' ),
+					'description'   => __( 'URL to image file.', 'domain' ),
+					'control_attr'  => array(
+						'name'           => 'test_upload2',
+						'value'          => esc_url_raw( get_post_meta( $post_id, 'test_upload2', true ) ),
+					),
+					'media_args'    => array(
 						'library_type'   => 'image',
+					),
+				);
+				fx_Meta_Box::upload_url_field( $args );
+
+
+				/* ZIP Upload */
+				$args = array(
+					'label'         => __( 'Upload ZIP', 'domain' ),
+					'description'   => __( 'URL to ZIP file.', 'domain' ),
+					'control_attr'  => array(
+						'name'           => 'test_upload3',
+						'value'          => esc_url_raw( get_post_meta( $post_id, 'test_upload3', true ) ),
+					),
+					'media_args'    => array(
+						'upload_button'              => __( 'Upload ZIP', 'domain' ),
+						'remove_button'              => __( 'Remove ZIP', 'domain' ),
+						'media_modal_title'          => __( 'Upload ZIP File', 'domain' ),
+						'media_modal_insert_button'  => __( 'Insert ZIP URL', 'domain' ),
+						'library_type'              => 'application/zip',
 					),
 				);
 				fx_Meta_Box::upload_url_field( $args );
@@ -121,16 +207,17 @@ function meta_box_with_tabs( $post, $box ){
 		'radio_tabs' => array(
 			'id'          => 'radio_tabs',
 			'icon'        => 'dashicons-editor-table',
-			'label'       => __( 'Tabs-Inception', 'domain' ),
+			'label'       => __( 'Tabs', 'domain' ),
 			'callback'    => function() use( $post_id ){
 
 				/* Radio Tabs */
 				$args = array(
 					'label'         => __( 'Take One', 'domain' ),
 					'description'   => __( 'and I will show you how deep the rabbit hole goes...', 'domain' ),
-					'name'          => 'test_radio1',
-					'value'         => get_post_meta( $post_id, 'test_radio1', true ),
-					'default'       => 'blue',
+					'control_attr'  => array(
+						'name'          => 'test_radio1',
+						'value'         => fx_Meta_Box::sanitize_choices( get_post_meta( $post_id, 'test_radio1', true ), array( 'blue', 'red' ), 'blue' ),
+					),
 					'choices'       => array(
 						'blue' => array(
 							'label'      => __( 'Blue Pill', 'domain' ),
@@ -140,7 +227,7 @@ function meta_box_with_tabs( $post, $box ){
 								$args = array(
 									'label'         => __( 'Text 2', 'domain' ),
 									'description'   => __( 'Text input description...', 'domain' ),
-									'input_attr'    => array(
+									'control_attr'  => array(
 										'name'          => 'test_text2',
 										'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text2', true ) ),
 										'placeholder'   => sanitize_text_field( 'Add text here...' ),
@@ -160,9 +247,11 @@ function meta_box_with_tabs( $post, $box ){
 								$args = array(
 									'label'         => __( 'Text Area 2', 'domain' ),
 									'description'   => __( 'Textarea description...', 'domain' ),
-									'name'          => 'test_textarea2',
-									'value'         => esc_textarea( get_post_meta( $post_id, 'test_textarea2', true ) ),
-									'placeholder'   => esc_textarea( 'Lorem ipsum...' ),
+									'control_attr'  => array(
+										'name'          => 'test_textarea2',
+										'value'         => esc_textarea( get_post_meta( $post_id, 'test_textarea2', true ) ),
+										'placeholder'   => sanitize_text_field( 'Lorem ipsum...' ),
+									),
 								);
 								fx_Meta_Box::textarea_field( $args );
 							},
@@ -171,6 +260,24 @@ function meta_box_with_tabs( $post, $box ){
 				);
 				fx_Meta_Box::radio_tabs_field( $args );
 
+			},
+		),
+		'editor' => array(
+			'id'          => 'editor',
+			'icon'        => 'dashicons-edit',
+			'label'       => __( 'WP Editor', 'domain' ),
+			'callback'    => function() use( $post_id ){
+
+				/* Editor */
+				$args = array(
+					'label'         => __( 'Editor', 'domain' ),
+					'description'   => __( 'Editor description...', 'domain' ),
+					'control_attr'  => array(
+						'name'          => 'test_editor1',
+						'value'         => esc_textarea( get_post_meta( $post_id, 'test_editor1', true ) ),
+					),
+				);
+				fx_Meta_Box::wp_editor_field( $args );
 			},
 		),
 	);
@@ -193,7 +300,7 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 3', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'input_attr'    => array(
+		'control_attr'  => array(
 			'name'          => 'test_text3',
 			'value'         => sanitize_text_field( get_post_meta( $post_id, 'test_text3', true ) ),
 			'placeholder'   => sanitize_text_field( 'Add text here...' ),
@@ -207,7 +314,7 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 4 (URL)', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'input_attr'    => array(
+		'control_attr'  => array(
 			'name'          => 'test_text4',
 			'value'         => esc_url_raw( get_post_meta( $post_id, 'test_text4', true ) ),
 			'placeholder'   => esc_html( 'http://' ),
@@ -221,7 +328,7 @@ function meta_box_simple( $post, $box ){
 	$args = array(
 		'label'         => __( 'Text 5 (URL)', 'domain' ),
 		'description'   => __( 'Text input description...', 'domain' ),
-		'input_attr'    => array(
+		'control_attr'  => array(
 			'name'          => 'test_text5',
 			'value'         => intval( get_post_meta( $post_id, 'test_text5', true ) ),
 			'placeholder'   => 0,
@@ -276,6 +383,24 @@ function save_meta_box_with_tabs( $post_id, $post ){
 			'key'  => 'test_textarea1',
 			'data' => isset( $request['test_textarea1'] ) ? wp_kses_post( $request['test_textarea1'] ) : '',
 		),
+		array(
+			'key'  => 'test_select1',
+			'data' => isset( $request['test_select1'] ) ? fx_Meta_Box::sanitize_choices( $request['test_select1'], array( 'siji', 'loro', 'telu' ), '' ) : '',
+		),
+
+		/* Save Checkboxes Section */
+		array(
+			'key'  => 'test_check1',
+			'data' => isset( $request['test_check1'] ) ? ( $request['test_check1'] ? 1 : 0 ) : '',
+		),
+		array(
+			'key'  => 'test_check2',
+			'data' => isset( $request['test_check2'] ) ? ( $request['test_check2'] ? 1 : 0 ) : '',
+		),
+		array(
+			'key'  => 'test_check3',
+			'data' => isset( $request['test_check3'] ) ? fx_Meta_Box::sanitize_multiple( $request['test_check3'], array( 'apple', 'mango', 'banana' ) ) : '',
+		),
 
 		/* Save Uploads Section */
 		array(
@@ -286,11 +411,15 @@ function save_meta_box_with_tabs( $post_id, $post ){
 			'key'  => 'test_upload2',
 			'data' => isset( $request['test_upload2'] ) ? esc_url_raw( $request['test_upload2'] ) : '',
 		),
+		array(
+			'key'  => 'test_upload3',
+			'data' => isset( $request['test_upload3'] ) ? esc_url_raw( $request['test_upload3'] ) : '',
+		),
 
 		/* Save Radio/Tab Section */
 		array(
 			'key'  => 'test_radio1',
-			'data' => isset( $request['test_radio1'] ) ? esc_attr( $request['test_radio1'] ) : '',
+			'data' => isset( $request['test_radio1'] ) ? fx_Meta_Box::sanitize_choices( get_post_meta( $post_id, 'test_radio1', true ), array( 'blue', 'red' ), 'blue' ) : '',
 		),
 		array(
 			'key'  => 'test_text2',
@@ -299,6 +428,12 @@ function save_meta_box_with_tabs( $post_id, $post ){
 		array(
 			'key'  => 'test_textarea2',
 			'data' => isset( $request['test_textarea2'] ) ? esc_attr( $request['test_textarea2'] ) : '',
+		),
+
+		/* Save Editor Section */
+		array(
+			'key'  => 'test_editor1',
+			'data' => isset( $request['test_editor1'] ) ? esc_attr( $request['test_editor1'] ) : '',
 		),
 	);
 	foreach( $fields as $args ){
